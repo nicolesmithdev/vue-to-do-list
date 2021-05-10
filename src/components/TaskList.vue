@@ -8,7 +8,6 @@
                 :key="task.id"
                 :id="task.id"
                 :task="task.task"
-                @delete-task="deleteTask"
             ></single-task>
         </ul>
         <button @click="clearTasks">Clear Tasks</button>
@@ -25,15 +24,12 @@ export default {
         SingleTask
     },
     props: ['tasks'],
-    emits: ['clear-tasks', 'delete-task', 'filter-tasks'],
+    emits: ['filter-tasks'],
     methods: {
         clearTasks() {
             if ( confirm("Are you sure?") ) {
-                return this.$emit('clear-tasks');
+                this.$store.dispatch('clearTasks');
             }
-        },
-        deleteTask(value) {
-            this.$emit('delete-task', value);
         },
         filterTasks(value) {
             this.$emit('filter-tasks', value);

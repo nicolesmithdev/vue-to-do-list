@@ -7,12 +7,11 @@
 
 <script>
 export default {
-    emits: ['delete-task'],
     props: ['id', 'task'],
     methods: {
         deleteTask(id) {
             if ( confirm("Are you sure?" ) ) {
-                this.$emit('delete-task', id);
+                this.$store.dispatch('deleteTask', { id: id });
             }
         }
     }

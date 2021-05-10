@@ -1,13 +1,12 @@
 <template>
   <div class="container">
-    <add-task @new-task="addTask"></add-task>
-    <task-list 
-      v-if="hasTasks" 
+    <add-task></add-task>
+    <task-list
+      v-if="hasTasks"
       :tasks="filteredTasks"
-      @clear-tasks="clearTasks"
-      @delete-task="deleteTask"
       @filter-tasks="filterTasks"
-    ></task-list>
+    >
+    </task-list>
   </div>
 </template>
 
@@ -22,43 +21,24 @@ export default {
   },
   data() {
     return {
-      filterQuery: null,
-      tasks: []
+      filterQuery: null
     };
   },
   computed: {
     hasTasks() {
-      return this.tasks.length > 0;
+      return this.$store.getters['hasTasks'];
     },
     filteredTasks() {
-      return this.filterQuery ? this.tasks.filter(task => task.task.toLowerCase().includes(this.filterQuery.toLowerCase())) : this.tasks;
+      const tasks = this.$store.getters['tasks'];
+      return this.filterQuery ? tasks.filter(task => task.task.toLowerCase().includes(this.filterQuery.toLowerCase())) : tasks;
     }
   },
   beforeMount() {
     if ( localStorage.getItem('tasks') ) {
-      this.tasks = JSON.parse(localStorage.getItem('tasks'));
+      this.$store.dispatch('setTasks', { tasks: JSON.parse(localStorage.getItem('tasks')) });
     }
   },
   methods: {
-    addTask(value) {
-      this.tasks.push({
-        id: new Date().toISOString(),
-        task: value
-      });
-      this.saveTasks();
-    },
-    clearTasks() {
-      this.tasks = [];
-      this.saveTasks();
-    },
-    deleteTask(id) {
-        const index = this.tasks.findIndex(task => task.id === id);
-        this.tasks.splice(index, 1);
-        this.saveTasks();
-    },
-    saveTasks() {
-      localStorage.setItem('tasks', JSON.stringify(this.tasks));
-    },
     filterTasks(value) {
       this.filterQuery = value.trim();
     }

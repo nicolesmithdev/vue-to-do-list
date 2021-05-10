@@ -10,13 +10,11 @@
 
 <script>
 export default {
-    emits: ['new-task'],
     methods: {
         addTask() {
             const task = this.$refs.task.value;
-
-            if ( task.trim() != '' ) {
-                this.$emit('new-task', task);
+            if (task.trim() != '' ) {
+                this.$store.dispatch('addTask', { task: task });
                 this.$refs.task.value = '';
             } else {
                 alert("Field cannot be empty");
